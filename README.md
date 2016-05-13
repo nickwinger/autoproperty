@@ -12,7 +12,6 @@ How to fast detect if a property of a class changed it's value ?
     p.name = 'John';
 
     // There is no way we can get informed that the name has changed
-
 ```
 
 ## Example
@@ -31,8 +30,34 @@ Using typescript annotations, we automagically create getter and setter out of a
     p.propertyChanged.subscribe((args: PropertyChangedEventArgs) => {
         console.log(args.propertyName + ' changed from ' + args.oldValue + ' to ' + args.newValue);
     });
-
 ```
+
+## Under the hood
+What has been done by the autoproperty annotation ?
+This:
+```typescript
+    class Person extends NotifyPropertyChanged {
+        @autoproperty
+        name: string;
+    }
+```
+gets transformed into:
+```typescript
+    class Person extends NotifyPropertyChanged {
+        _name: string;
+
+        get name(): string {
+            return this._name;
+        }
+
+        set name(newValue: string) {
+            var oldValue = this._name;
+            this._name = newValue;
+            this.propertyChanged.next('name', oldValue, newValue);
+        }
+    }
+```
+Getter and setter and a "hidden" field are automagically created.
 
 # Restrictions (and ToDo's)
 * Resursive. An autoproperty cannot have itself as a property (endless loop of typescript annotation)
