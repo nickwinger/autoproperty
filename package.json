@@ -1,7 +1,7 @@
 {
   "name": "autoproperty",
   "version": "1.0.0",
-  "description": "Automatically creates getter and setter to implement OnPropertyChanged Stream",
+  "description": "Automagically creates getter and setter to provide OnPropertyChanged Stream",
   "main": "src/autoproperty.js",
   "typings": "src/serialize.d.ts",
   "scripts": {
