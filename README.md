@@ -34,6 +34,7 @@ Using typescript annotations, we automagically create getter and setter out of a
 
 ## Under the hood
 What has been done by the autoproperty annotation ?
+
 This:
 ```typescript
     class Person extends NotifyPropertyChanged {
