@@ -4,7 +4,28 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var rxjs_1 = require("rxjs");
+var SimpleSubject = (function () {
+    function SimpleSubject() {
+        this.listeners = [];
+    }
+    SimpleSubject.prototype.next = function (value) {
+        for (var i = 0; i < this.listeners.length; i++) {
+            this.listeners[i](value);
+        }
+    };
+    SimpleSubject.prototype.subscribe = function (listener) {
+        var _this = this;
+        var index = this.listeners.length;
+        this.listeners.push(listener);
+        return {
+            unsubscribe: function () {
+                _this.listeners.splice(index, 1);
+            }
+        };
+    };
+    return SimpleSubject;
+}());
+exports.SimpleSubject = SimpleSubject;
 var win = null;
 try {
     win = window;
@@ -31,7 +52,7 @@ var PropertyChangedEventArgs = (function (_super) {
 exports.PropertyChangedEventArgs = PropertyChangedEventArgs;
 var NotifyPropertyChanged = (function () {
     function NotifyPropertyChanged() {
-        this.propertyChanged = new rxjs_1.Subject();
+        this.propertyChanged = new SimpleSubject();
     }
     NotifyPropertyChanged.prototype.onPropertyChanged = function (name, oldValue, newValue) {
         this.propertyChanged.next(new PropertyChangedEventArgs(name, oldValue, newValue));
@@ -105,7 +126,9 @@ function autoproperty(target, keyName) {
                     _this.onPropertyChanged(keyName + '.' + args.propertyName, args.oldValue, args.newValue);
                 });
             }
-            this.onPropertyChanged(keyName, oldValue, this[protectedKeyName]);
+            if (oldValue != newValue) {
+                this.onPropertyChanged(keyName, oldValue, this[protectedKeyName]);
+            }
         },
         enumerable: true,
         configurable: true

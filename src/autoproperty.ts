@@ -1,5 +1,35 @@
 import {Subject} from "rxjs";
 
+// Right now there are problems with the rxjs subject going into an infinite loop, so we have to hack our own simple implemention
+// for the time beeing
+
+export interface ISimpleSubjectUnsubscribeFn {
+    unsubscribe: () => void;
+}
+
+export class SimpleSubject<T> {
+    listeners: Function[] = [];
+
+    next(value: T) {
+        for (var i = 0; i < this.listeners.length; i++) {
+            this.listeners[i](value);
+        }
+    }
+
+    subscribe(listener: (value: T) => void): ISimpleSubjectUnsubscribeFn {
+        let index = this.listeners.length;
+
+        this.listeners.push(listener);
+
+        // return unsubscribe function
+        return {
+            unsubscribe: () => {
+                this.listeners.splice(index, 1);
+            }
+        };
+    }
+}
+
 //this library can be used in Node or a browser, make sure our global object points to the right place
 declare var global : any;
 
@@ -20,15 +50,15 @@ export class PropertyChangedEventArgs extends PropertyChangedEventArgsGeneric<an
 }
 
 export interface INotifyPropertyChanged {
-    propertyChanged: Subject<PropertyChangedEventArgs>;
+    propertyChanged: SimpleSubject<PropertyChangedEventArgs>;
     onPropertyChanged(name: string, oldValue: any, newValue: any): void;
 }
 
 export abstract class NotifyPropertyChanged implements INotifyPropertyChanged {
-    propertyChanged: Subject<PropertyChangedEventArgs>;
+    propertyChanged: SimpleSubject<PropertyChangedEventArgs>;
 
     constructor() {
-        this.propertyChanged = new Subject<PropertyChangedEventArgs>();
+        this.propertyChanged = new SimpleSubject<PropertyChangedEventArgs>();
     }
 
     onPropertyChanged(name: string, oldValue: any, newValue: any): void {
@@ -123,8 +153,10 @@ export function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName
                 });
             }
 
-            // Call OnPropertyChanged whenever the property is updated
-            this.onPropertyChanged(keyName, oldValue, this[protectedKeyName]);
+            if (oldValue != newValue) {
+                // Call OnPropertyChanged whenever the property is updated
+                this.onPropertyChanged(keyName, oldValue, this[protectedKeyName]);
+            }
         },
         enumerable: true,
         configurable: true

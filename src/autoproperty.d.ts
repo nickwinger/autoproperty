@@ -1,4 +1,11 @@
-import { Subject } from "rxjs";
+export interface ISimpleSubjectUnsubscribeFn {
+    unsubscribe: () => void;
+}
+export declare class SimpleSubject<T> {
+    listeners: Function[];
+    next(value: T): void;
+    subscribe(listener: (value: T) => void): ISimpleSubjectUnsubscribeFn;
+}
 export declare class PropertyChangedEventArgsGeneric<T> {
     propertyName: string;
     oldValue: T;
@@ -8,11 +15,11 @@ export declare class PropertyChangedEventArgsGeneric<T> {
 export declare class PropertyChangedEventArgs extends PropertyChangedEventArgsGeneric<any> {
 }
 export interface INotifyPropertyChanged {
-    propertyChanged: Subject<PropertyChangedEventArgs>;
+    propertyChanged: SimpleSubject<PropertyChangedEventArgs>;
     onPropertyChanged(name: string, oldValue: any, newValue: any): void;
 }
 export declare abstract class NotifyPropertyChanged implements INotifyPropertyChanged {
-    propertyChanged: Subject<PropertyChangedEventArgs>;
+    propertyChanged: SimpleSubject<PropertyChangedEventArgs>;
     constructor();
     onPropertyChanged(name: string, oldValue: any, newValue: any): void;
 }
