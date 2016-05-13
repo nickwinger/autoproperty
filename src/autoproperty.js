@@ -84,9 +84,15 @@ function autoproperty(target, keyName) {
             return ret;
         },
         set: function (newValue) {
+            var _this = this;
             var oldValue = this[protectedKeyName];
             this[protectedKeyName] = newValue;
             type = Object.prototype.toString.call(newValue);
+            if (newValue instanceof NotifyPropertyChanged) {
+                newValue.propertyChanged.subscribe(function (args) {
+                    _this.onPropertyChanged(keyName + '.' + args.propertyName, args.oldValue, args.newValue);
+                });
+            }
             this.onPropertyChanged(keyName, oldValue, this[protectedKeyName]);
         },
         enumerable: true,

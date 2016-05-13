@@ -96,6 +96,15 @@ export function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName
             // Determine the type
             type = Object.prototype.toString.call(newValue);
 
+            // if the property itself is a subclass of NotifyPropertyChanged, listen for changes there
+            if (newValue instanceof NotifyPropertyChanged) {
+                newValue.propertyChanged.subscribe((args: PropertyChangedEventArgs) => {
+                    // something changed inside a property that itself is a NotifyPropertyChanged class
+                    // prefix the keyName
+                    this.onPropertyChanged(keyName + '.' + args.propertyName, args.oldValue, args.newValue);
+                });
+            }
+
             // Call OnPropertyChanged whenever the property is updated
             this.onPropertyChanged(keyName, oldValue, this[protectedKeyName]);
         },

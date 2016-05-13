@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "rootDir": "src",
     "module": "commonjs",
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "removeComments": true,
     "noLib": false
-  }
+  },
+  "exclude": ["node_modules"]
 }

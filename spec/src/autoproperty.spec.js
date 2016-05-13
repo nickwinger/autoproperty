@@ -26,6 +26,17 @@ var Car = (function (_super) {
     ], Car.prototype, "make", void 0);
     return Car;
 }(autoproperty_1.NotifyPropertyChanged));
+var Child = (function (_super) {
+    __extends(Child, _super);
+    function Child() {
+        _super.apply(this, arguments);
+    }
+    __decorate([
+        autoproperty_1.autoproperty, 
+        __metadata('design:type', String)
+    ], Child.prototype, "name", void 0);
+    return Child;
+}(autoproperty_1.NotifyPropertyChanged));
 var Person = (function (_super) {
     __extends(Person, _super);
     function Person() {
@@ -35,6 +46,7 @@ var Person = (function (_super) {
         this.newsletter = false;
         this.hobbies = ['Skiing'];
         this.car = new Car('Chevrolet');
+        this.child = new Child();
     }
     __decorate([
         autoproperty_1.autoproperty, 
@@ -56,6 +68,10 @@ var Person = (function (_super) {
         autoproperty_1.autoproperty, 
         __metadata('design:type', Array)
     ], Person.prototype, "hobbies", void 0);
+    __decorate([
+        autoproperty_1.autoproperty, 
+        __metadata('design:type', Child)
+    ], Person.prototype, "child", void 0);
     return Person;
 }(autoproperty_1.NotifyPropertyChanged));
 describe('propertyChanged', function () {
@@ -110,6 +126,15 @@ describe('propertyChanged', function () {
             expect(args.newValue[1]).toBe('Driving');
         });
         p.hobbies.push('Driving');
+        subscription.unsubscribe();
+    });
+    it('should fire and reflect changes on properties of child classes', function () {
+        var p = new Person();
+        var subscription = p.propertyChanged.subscribe(function (args) {
+            expect(args.propertyName).toBe('child.name');
+            expect(args.newValue).toBe('Florian');
+        });
+        p.child.name = 'Florian';
         subscription.unsubscribe();
     });
 });

@@ -12,6 +12,11 @@ class Car extends NotifyPropertyChanged {
     }
 }
 
+class Child extends NotifyPropertyChanged {
+    @autoproperty
+    name: string;
+}
+
 class Person extends NotifyPropertyChanged {
     @autoproperty
     name: string = 'Thomas';
@@ -28,10 +33,14 @@ class Person extends NotifyPropertyChanged {
     @autoproperty
     hobbies: string[] = ['Skiing'];
 
+    @autoproperty
+    child: Child;
+
     constructor() {
         super();
         
         this.car = new Car('Chevrolet');
+        this.child = new Child();
     }
 }
 
@@ -103,8 +112,21 @@ describe('propertyChanged', () => {
             expect(args.newValue[0]).toBe('Skiing');
             expect(args.newValue[1]).toBe('Driving');
         });
-        
+
         p.hobbies.push('Driving');
+
+        subscription.unsubscribe();
+    });
+
+    it('should fire and reflect changes on properties of child classes', () => {
+        var p = new Person();
+
+        var subscription = p.propertyChanged.subscribe((args: PropertyChangedEventArgsGeneric<Array<string>>) => {
+            expect(args.propertyName).toBe('child.name');
+            expect(args.newValue).toBe('Florian');
+        });
+
+        p.child.name = 'Florian';
 
         subscription.unsubscribe();
     });
