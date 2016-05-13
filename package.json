@@ -1,0 +1,28 @@
+{
+  "name": "autoproperty",
+  "version": "1.0.0",
+  "description": "Automatically creates getter and setter to implement OnPropertyChanged Stream",
+  "main": "src/autoproperty.js",
+  "typings": "src/serialize.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "changedetection",
+    "typescript",
+    "propertychanged",
+    "property",
+    "annotations",
+    "decoration",
+    "decorators"
+  ],
+  "author": "Nick Winger",
+  "license": "MIT",
+  "dependencies": {
+    "rxjs": "^5.0.0-beta.7"
+  },
+  "devDependencies": {
+    "jasmine": "^2.4.1",
+    "jasmine-core": "^2.4.1"
+  }
+}
