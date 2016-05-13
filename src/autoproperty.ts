@@ -36,12 +36,30 @@ export abstract class NotifyPropertyChanged implements INotifyPropertyChanged {
     }
 }
 
+// an array the holds the types on which we have already set getter and setters
+var typeMap = [];
+
 export function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName: string): any {
     // automagically create a protected member and assign the default value
     var protectedKeyName = '_' + keyName;
     var anyTarget = <any>target;
     anyTarget[protectedKeyName] = anyTarget[keyName];
     var type: string;
+
+    var getterAndSetterAlreadyAdded = false;
+
+    for (var i = 0; i < typeMap.length; i++) {
+        if (typeMap[i] === target.constructor['name']) {
+            getterAndSetterAlreadyAdded = true;
+            break;
+        }
+    }
+
+    if (getterAndSetterAlreadyAdded) {
+        return;
+    }
+
+    typeMap.push(target.constructor['name']);
 
     // automagically create getter and setter
     Object.defineProperty(target, keyName, {

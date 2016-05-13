@@ -39,11 +39,23 @@ var NotifyPropertyChanged = (function () {
     return NotifyPropertyChanged;
 }());
 exports.NotifyPropertyChanged = NotifyPropertyChanged;
+var typeMap = [];
 function autoproperty(target, keyName) {
     var protectedKeyName = '_' + keyName;
     var anyTarget = target;
     anyTarget[protectedKeyName] = anyTarget[keyName];
     var type;
+    var getterAndSetterAlreadyAdded = false;
+    for (var i = 0; i < typeMap.length; i++) {
+        if (typeMap[i] === target.constructor['name']) {
+            getterAndSetterAlreadyAdded = true;
+            break;
+        }
+    }
+    if (getterAndSetterAlreadyAdded) {
+        return;
+    }
+    typeMap.push(target.constructor['name']);
     Object.defineProperty(target, keyName, {
         get: function () {
             var ret = this[protectedKeyName];

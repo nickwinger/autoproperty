@@ -46,6 +46,7 @@ var Person = (function (_super) {
         this.newsletter = false;
         this.hobbies = ['Skiing'];
         this.car = new Car('Chevrolet');
+        this.secondCar = new Car('Toyota');
         this.child = new Child();
     }
     __decorate([
@@ -64,6 +65,10 @@ var Person = (function (_super) {
         autoproperty_1.autoproperty, 
         __metadata('design:type', Car)
     ], Person.prototype, "car", void 0);
+    __decorate([
+        autoproperty_1.autoproperty, 
+        __metadata('design:type', Car)
+    ], Person.prototype, "secondCar", void 0);
     __decorate([
         autoproperty_1.autoproperty, 
         __metadata('design:type', Array)

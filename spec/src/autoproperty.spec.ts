@@ -31,6 +31,9 @@ class Person extends NotifyPropertyChanged {
     car: Car;
 
     @autoproperty
+    secondCar: Car;
+
+    @autoproperty
     hobbies: string[] = ['Skiing'];
 
     @autoproperty
@@ -40,6 +43,7 @@ class Person extends NotifyPropertyChanged {
         super();
         
         this.car = new Car('Chevrolet');
+        this.secondCar = new Car('Toyota');
         this.child = new Child();
     }
 }
