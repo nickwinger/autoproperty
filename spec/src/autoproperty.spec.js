@@ -102,13 +102,14 @@ describe('propertyChanged', function () {
     it('should fire and reflect changes on arrays', function () {
         var p = new Person();
         var subscription = p.propertyChanged.subscribe(function (args) {
-            console.log('a', args);
             expect(args.propertyName).toBe('hobbies');
-            expect(args.oldValue).toBe(['Skiing']);
-            expect(args.newValue).toBe(['Skiing', 'Driving']);
+            expect(args.oldValue.length).toBe(1);
+            expect(args.oldValue[0]).toBe('Skiing');
+            expect(args.newValue.length).toBe(2);
+            expect(args.newValue[0]).toBe('Skiing');
+            expect(args.newValue[1]).toBe('Driving');
         });
-        p['_hobbies'].push('Driving');
-        console.log('p', p['_hobbies']);
+        p.hobbies.push('Driving');
         subscription.unsubscribe();
     });
 });

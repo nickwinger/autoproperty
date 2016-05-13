@@ -36,19 +36,6 @@ export abstract class NotifyPropertyChanged implements INotifyPropertyChanged {
     }
 }
 
-function extendArray<T extends NotifyPropertyChanged>(target: T, keyName: string) {
-    var protectedKeyName = '_' + keyName;
-    var anyTarget = <any>target;
-    var arr = anyTarget[protectedKeyName];
-
-    arr.push = function () {console.log('push', arguments);
-        var oldValue = this.slice();
-        var ret = Array.prototype.push.apply(this, arguments);
-        target.onPropertyChanged(keyName, oldValue, this);
-        return ret;
-    };
-}
-
 export function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName: string): any {
     // automagically create a protected member and assign the default value
     var protectedKeyName = '_' + keyName;
@@ -56,44 +43,61 @@ export function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName
     anyTarget[protectedKeyName] = anyTarget[keyName];
     var type: string;
 
-    var setType = (newType: string, runtimeTarget: any) => {
-        type = newType;
-
-        // arrays need to be extended
-        if (type === '[object Array]') {
-            extendArray(runtimeTarget, keyName);
-        }
-    };
-
     // automagically create getter and setter
     Object.defineProperty(target, keyName, {
-        get: function () { return this[protectedKeyName]; },
+        get: function () {
+            var ret = this[protectedKeyName];
+
+            // return an array proxy to intercept the calls to push, pop, shift, unshift and slice
+            if (type === '[object Array]') {
+                // first create a copy of our array
+                var ret = ret.slice();
+                var runtimeTarget = this;
+
+                // proxy the 5 standard methods
+                ret.push = function() {
+                    var oldValue = runtimeTarget[protectedKeyName].slice();
+                    var ret = Array.prototype.push.apply(runtimeTarget[protectedKeyName], arguments);
+                    runtimeTarget.onPropertyChanged(keyName, oldValue, runtimeTarget[protectedKeyName]);
+                    return ret;
+                };
+                ret.pop = function() {
+                    var oldValue = runtimeTarget[protectedKeyName].slice();
+                    var ret = Array.prototype.pop.apply(runtimeTarget[protectedKeyName], arguments);
+                    runtimeTarget.onPropertyChanged(keyName, oldValue, runtimeTarget[protectedKeyName]);
+                    return ret;
+                };
+                ret.shift = function() {
+                    var oldValue = runtimeTarget[protectedKeyName].slice();
+                    var ret = Array.prototype.shift.apply(runtimeTarget[protectedKeyName], arguments);
+                    runtimeTarget.onPropertyChanged(keyName, oldValue, runtimeTarget[protectedKeyName]);
+                    return ret;
+                };
+                ret.unshift = function() {
+                    var oldValue = runtimeTarget[protectedKeyName].slice();
+                    var ret = Array.prototype.unshift.apply(runtimeTarget[protectedKeyName], arguments);
+                    runtimeTarget.onPropertyChanged(keyName, oldValue, runtimeTarget[protectedKeyName]);
+                    return ret;
+                };
+                ret.slice = function() {
+                    var oldValue = runtimeTarget[protectedKeyName].slice();
+                    var ret = Array.prototype.slice.apply(runtimeTarget[protectedKeyName], arguments);
+                    runtimeTarget.onPropertyChanged(keyName, oldValue, runtimeTarget[protectedKeyName]);
+                    return ret;
+                };
+            }
+
+            return ret;
+        },
         set: function (newValue) {
             var oldValue = this[protectedKeyName];
             this[protectedKeyName] = newValue;
-            // Call OnPropertyChanged whenever the property is updated
-            this.onPropertyChanged(keyName, oldValue, newValue);
 
             // Determine the type
-            var currentType = Object.prototype.toString.call(newValue);
-            if (currentType != type) {
-                //setType(currentType, this);
-                type = currentType;
+            type = Object.prototype.toString.call(newValue);
 
-                // arrays need to be extended
-                if (type === '[object Array]') {
-                    var arr = this[protectedKeyName];
-                    console.log('new', arr);
-                    arr.push('try');
-
-                    arr.push = function () {console.log('push', arguments);
-                        var oldValue = this;
-                        var ret = Array.prototype.push.apply(this, arguments);
-                        target.onPropertyChanged(keyName, oldValue, this);
-                        return ret;
-                    };
-                }
-            }
+            // Call OnPropertyChanged whenever the property is updated
+            this.onPropertyChanged(keyName, oldValue, this[protectedKeyName]);
         },
         enumerable: true,
         configurable: true

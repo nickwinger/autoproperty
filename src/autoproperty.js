@@ -39,51 +39,55 @@ var NotifyPropertyChanged = (function () {
     return NotifyPropertyChanged;
 }());
 exports.NotifyPropertyChanged = NotifyPropertyChanged;
-function extendArray(target, keyName) {
-    var protectedKeyName = '_' + keyName;
-    var anyTarget = target;
-    var arr = anyTarget[protectedKeyName];
-    arr.push = function () {
-        console.log('push', arguments);
-        var oldValue = this.slice();
-        var ret = Array.prototype.push.apply(this, arguments);
-        target.onPropertyChanged(keyName, oldValue, this);
-        return ret;
-    };
-}
 function autoproperty(target, keyName) {
     var protectedKeyName = '_' + keyName;
     var anyTarget = target;
     anyTarget[protectedKeyName] = anyTarget[keyName];
     var type;
-    var setType = function (newType, runtimeTarget) {
-        type = newType;
-        if (type === '[object Array]') {
-            extendArray(runtimeTarget, keyName);
-        }
-    };
     Object.defineProperty(target, keyName, {
-        get: function () { return this[protectedKeyName]; },
+        get: function () {
+            var ret = this[protectedKeyName];
+            if (type === '[object Array]') {
+                var ret = ret.slice();
+                var runtimeTarget = this;
+                ret.push = function () {
+                    var oldValue = runtimeTarget[protectedKeyName].slice();
+                    var ret = Array.prototype.push.apply(runtimeTarget[protectedKeyName], arguments);
+                    runtimeTarget.onPropertyChanged(keyName, oldValue, runtimeTarget[protectedKeyName]);
+                    return ret;
+                };
+                ret.pop = function () {
+                    var oldValue = runtimeTarget[protectedKeyName].slice();
+                    var ret = Array.prototype.pop.apply(runtimeTarget[protectedKeyName], arguments);
+                    runtimeTarget.onPropertyChanged(keyName, oldValue, runtimeTarget[protectedKeyName]);
+                    return ret;
+                };
+                ret.shift = function () {
+                    var oldValue = runtimeTarget[protectedKeyName].slice();
+                    var ret = Array.prototype.shift.apply(runtimeTarget[protectedKeyName], arguments);
+                    runtimeTarget.onPropertyChanged(keyName, oldValue, runtimeTarget[protectedKeyName]);
+                    return ret;
+                };
+                ret.unshift = function () {
+                    var oldValue = runtimeTarget[protectedKeyName].slice();
+                    var ret = Array.prototype.unshift.apply(runtimeTarget[protectedKeyName], arguments);
+                    runtimeTarget.onPropertyChanged(keyName, oldValue, runtimeTarget[protectedKeyName]);
+                    return ret;
+                };
+                ret.slice = function () {
+                    var oldValue = runtimeTarget[protectedKeyName].slice();
+                    var ret = Array.prototype.slice.apply(runtimeTarget[protectedKeyName], arguments);
+                    runtimeTarget.onPropertyChanged(keyName, oldValue, runtimeTarget[protectedKeyName]);
+                    return ret;
+                };
+            }
+            return ret;
+        },
         set: function (newValue) {
             var oldValue = this[protectedKeyName];
             this[protectedKeyName] = newValue;
-            this.onPropertyChanged(keyName, oldValue, newValue);
-            var currentType = Object.prototype.toString.call(newValue);
-            if (currentType != type) {
-                type = currentType;
-                if (type === '[object Array]') {
-                    var arr = this[protectedKeyName];
-                    console.log('new', arr);
-                    arr.push('try');
-                    arr.push = function () {
-                        console.log('push', arguments);
-                        var oldValue = this;
-                        var ret = Array.prototype.push.apply(this, arguments);
-                        target.onPropertyChanged(keyName, oldValue, this);
-                        return ret;
-                    };
-                }
-            }
+            type = Object.prototype.toString.call(newValue);
+            this.onPropertyChanged(keyName, oldValue, this[protectedKeyName]);
         },
         enumerable: true,
         configurable: true
