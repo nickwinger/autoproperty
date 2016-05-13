@@ -16,6 +16,10 @@
     "decoration",
     "decorators"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nickwinger/autoproperty.git"
+  },
   "author": "Nick Winger",
   "license": "MIT",
   "dependencies": {
