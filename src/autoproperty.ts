@@ -120,45 +120,45 @@ export class ArrayProxy {
         var self = this;
 
         // proxy the 5 standard methods
-        arrayToProxy['__push'] = arrayToProxy.push;
+        arrayToProxy['$$push'] = arrayToProxy.push;
         arrayToProxy.push = function () {
-            let oldValue = self.runtimeTarget[self.protectedKeyName]['__slice']();
+            let oldValue = self.runtimeTarget[self.protectedKeyName]['$$slice']();
             let ret = Array.prototype.push.apply(self.runtimeTarget[self.protectedKeyName], arguments);
             self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
             self.subscribe(self);
             return ret;
         };
 
-        arrayToProxy['__pop'] = arrayToProxy.pop;
+        arrayToProxy['$$pop'] = arrayToProxy.pop;
         arrayToProxy.pop = function () {
-            let oldValue = self.runtimeTarget[self.protectedKeyName]['__slice']();
+            let oldValue = self.runtimeTarget[self.protectedKeyName]['$$slice']();
             let ret = Array.prototype.pop.apply(self.runtimeTarget[self.protectedKeyName], arguments);
             self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
             self.subscribe(self);
             return ret;
         };
 
-        arrayToProxy['__shift'] = arrayToProxy.shift;
+        arrayToProxy['$$shift'] = arrayToProxy.shift;
         arrayToProxy.shift = function () {
-            let oldValue = self.runtimeTarget[self.protectedKeyName]['__slice']();
+            let oldValue = self.runtimeTarget[self.protectedKeyName]['$$slice']();
             let ret = Array.prototype.shift.apply(self.runtimeTarget[self.protectedKeyName], arguments);
             self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
             self.subscribe(self);
             return ret;
         };
 
-        arrayToProxy['__unshift'] = arrayToProxy.unshift;
+        arrayToProxy['$$unshift'] = arrayToProxy.unshift;
         arrayToProxy.unshift = function () {
-            let oldValue = self.runtimeTarget[self.protectedKeyName]['__slice']();
+            let oldValue = self.runtimeTarget[self.protectedKeyName]['$$slice']();
             let ret = Array.prototype.unshift.apply(self.runtimeTarget[self.protectedKeyName], arguments);
             self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
             self.subscribe(self);
             return ret;
         };
 
-        arrayToProxy['__slice'] = arrayToProxy.slice;
+        arrayToProxy['$$slice'] = arrayToProxy.slice;
         arrayToProxy.slice = function () {
-            let oldValue = self.runtimeTarget[self.protectedKeyName]['__slice']();
+            let oldValue = self.runtimeTarget[self.protectedKeyName]['$$slice']();
             let ret = Array.prototype.slice.apply(self.runtimeTarget[self.protectedKeyName], arguments);
             self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
             self.subscribe(self);
@@ -169,12 +169,12 @@ export class ArrayProxy {
 
 export function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName: string): any {
     // automagically create a protected member and assign the default value
-    var protectedKeyName = '_' + keyName;
+    var protectedKeyName = '$' + keyName;
     var anyTarget = <any>target;
     anyTarget[protectedKeyName] = anyTarget[keyName];
     var type: string;
     var typeMapHash = target.constructor['name'] + '.' + keyName;
-    var getterProxyKey: string = '__getterProxy';
+    var getterProxyKey: string = '$$getterProxy';
 
     /*var getterAndSetterAlreadyAdded = false;
 

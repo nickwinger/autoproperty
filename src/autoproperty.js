@@ -103,41 +103,41 @@ var ArrayProxy = (function () {
     ArrayProxy.prototype.wrapProxy = function () {
         var arrayToProxy = this.arr;
         var self = this;
-        arrayToProxy['__push'] = arrayToProxy.push;
+        arrayToProxy['$$push'] = arrayToProxy.push;
         arrayToProxy.push = function () {
-            var oldValue = self.runtimeTarget[self.protectedKeyName]['__slice']();
+            var oldValue = self.runtimeTarget[self.protectedKeyName]['$$slice']();
             var ret = Array.prototype.push.apply(self.runtimeTarget[self.protectedKeyName], arguments);
             self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
             self.subscribe(self);
             return ret;
         };
-        arrayToProxy['__pop'] = arrayToProxy.pop;
+        arrayToProxy['$$pop'] = arrayToProxy.pop;
         arrayToProxy.pop = function () {
-            var oldValue = self.runtimeTarget[self.protectedKeyName]['__slice']();
+            var oldValue = self.runtimeTarget[self.protectedKeyName]['$$slice']();
             var ret = Array.prototype.pop.apply(self.runtimeTarget[self.protectedKeyName], arguments);
             self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
             self.subscribe(self);
             return ret;
         };
-        arrayToProxy['__shift'] = arrayToProxy.shift;
+        arrayToProxy['$$shift'] = arrayToProxy.shift;
         arrayToProxy.shift = function () {
-            var oldValue = self.runtimeTarget[self.protectedKeyName]['__slice']();
+            var oldValue = self.runtimeTarget[self.protectedKeyName]['$$slice']();
             var ret = Array.prototype.shift.apply(self.runtimeTarget[self.protectedKeyName], arguments);
             self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
             self.subscribe(self);
             return ret;
         };
-        arrayToProxy['__unshift'] = arrayToProxy.unshift;
+        arrayToProxy['$$unshift'] = arrayToProxy.unshift;
         arrayToProxy.unshift = function () {
-            var oldValue = self.runtimeTarget[self.protectedKeyName]['__slice']();
+            var oldValue = self.runtimeTarget[self.protectedKeyName]['$$slice']();
             var ret = Array.prototype.unshift.apply(self.runtimeTarget[self.protectedKeyName], arguments);
             self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
             self.subscribe(self);
             return ret;
         };
-        arrayToProxy['__slice'] = arrayToProxy.slice;
+        arrayToProxy['$$slice'] = arrayToProxy.slice;
         arrayToProxy.slice = function () {
-            var oldValue = self.runtimeTarget[self.protectedKeyName]['__slice']();
+            var oldValue = self.runtimeTarget[self.protectedKeyName]['$$slice']();
             var ret = Array.prototype.slice.apply(self.runtimeTarget[self.protectedKeyName], arguments);
             self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
             self.subscribe(self);
@@ -148,12 +148,12 @@ var ArrayProxy = (function () {
 }());
 exports.ArrayProxy = ArrayProxy;
 function autoproperty(target, keyName) {
-    var protectedKeyName = '_' + keyName;
+    var protectedKeyName = '$' + keyName;
     var anyTarget = target;
     anyTarget[protectedKeyName] = anyTarget[keyName];
     var type;
     var typeMapHash = target.constructor['name'] + '.' + keyName;
-    var getterProxyKey = '__getterProxy';
+    var getterProxyKey = '$$getterProxy';
     Object.defineProperty(target, keyName, {
         get: function () {
             var ret = this[protectedKeyName];
