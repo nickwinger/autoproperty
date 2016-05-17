@@ -62,17 +62,17 @@ var NotifyPropertyChanged = (function () {
 exports.NotifyPropertyChanged = NotifyPropertyChanged;
 var typeMap = [];
 var ArrayProxy = (function () {
-    function ArrayProxy(runtimeTarget, keyName, protectedKeyName, _arr) {
+    function ArrayProxy(runtimeTarget, keyName, protectedKeyName, arr) {
         this.runtimeTarget = runtimeTarget;
         this.keyName = keyName;
         this.protectedKeyName = protectedKeyName;
-        this._arr = _arr;
+        this.arr = arr;
         this.subscriptions = [];
+        this.wrapProxy();
     }
     ArrayProxy.prototype.clear = function () {
         this.unsubscribe();
         this.subscriptions = undefined;
-        this._arr = undefined;
     };
     ArrayProxy.prototype.unsubscribe = function (self) {
         if (!self) {
@@ -86,7 +86,7 @@ var ArrayProxy = (function () {
     ArrayProxy.prototype.subscribe = function (self) {
         self.unsubscribe(self);
         var _loop_1 = function(i) {
-            elem = self._arr[i];
+            elem = self.arr[i];
             if (elem instanceof NotifyPropertyChanged) {
                 var index_1 = i;
                 subscription = elem.propertyChanged.subscribe(function (args) {
@@ -96,54 +96,54 @@ var ArrayProxy = (function () {
             }
         };
         var elem, subscription;
-        for (var i = 0; i < self._arr.length; i++) {
+        for (var i = 0; i < self.arr.length; i++) {
             _loop_1(i);
         }
     };
-    Object.defineProperty(ArrayProxy.prototype, "arr", {
-        get: function () {
-            var arryToProxy = this._arr.slice();
-            var self = this;
-            arryToProxy.push = function () {
-                var oldValue = self.runtimeTarget[self.protectedKeyName].slice();
-                var ret = Array.prototype.push.apply(self.runtimeTarget[self.protectedKeyName], arguments);
-                self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
-                self.subscribe(self);
-                return ret;
-            };
-            arryToProxy.pop = function () {
-                var oldValue = self.runtimeTarget[self.protectedKeyName].slice();
-                var ret = Array.prototype.pop.apply(self.runtimeTarget[self.protectedKeyName], arguments);
-                self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
-                self.subscribe(self);
-                return ret;
-            };
-            arryToProxy.shift = function () {
-                var oldValue = self.runtimeTarget[self.protectedKeyName].slice();
-                var ret = Array.prototype.shift.apply(self.runtimeTarget[self.protectedKeyName], arguments);
-                self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
-                self.subscribe(self);
-                return ret;
-            };
-            arryToProxy.unshift = function () {
-                var oldValue = self.runtimeTarget[self.protectedKeyName].slice();
-                var ret = Array.prototype.unshift.apply(self.runtimeTarget[self.protectedKeyName], arguments);
-                self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
-                self.subscribe(self);
-                return ret;
-            };
-            arryToProxy.slice = function () {
-                var oldValue = self.runtimeTarget[self.protectedKeyName].slice();
-                var ret = Array.prototype.slice.apply(self.runtimeTarget[self.protectedKeyName], arguments);
-                self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
-                self.subscribe(self);
-                return ret;
-            };
-            return arryToProxy;
-        },
-        enumerable: true,
-        configurable: true
-    });
+    ArrayProxy.prototype.wrapProxy = function () {
+        var arrayToProxy = this.arr;
+        var self = this;
+        arrayToProxy['__push'] = arrayToProxy.push;
+        arrayToProxy.push = function () {
+            var oldValue = self.runtimeTarget[self.protectedKeyName]['__slice']();
+            var ret = Array.prototype.push.apply(self.runtimeTarget[self.protectedKeyName], arguments);
+            self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
+            self.subscribe(self);
+            return ret;
+        };
+        arrayToProxy['__pop'] = arrayToProxy.pop;
+        arrayToProxy.pop = function () {
+            var oldValue = self.runtimeTarget[self.protectedKeyName]['__slice']();
+            var ret = Array.prototype.pop.apply(self.runtimeTarget[self.protectedKeyName], arguments);
+            self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
+            self.subscribe(self);
+            return ret;
+        };
+        arrayToProxy['__shift'] = arrayToProxy.shift;
+        arrayToProxy.shift = function () {
+            var oldValue = self.runtimeTarget[self.protectedKeyName]['__slice']();
+            var ret = Array.prototype.shift.apply(self.runtimeTarget[self.protectedKeyName], arguments);
+            self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
+            self.subscribe(self);
+            return ret;
+        };
+        arrayToProxy['__unshift'] = arrayToProxy.unshift;
+        arrayToProxy.unshift = function () {
+            var oldValue = self.runtimeTarget[self.protectedKeyName]['__slice']();
+            var ret = Array.prototype.unshift.apply(self.runtimeTarget[self.protectedKeyName], arguments);
+            self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
+            self.subscribe(self);
+            return ret;
+        };
+        arrayToProxy['__slice'] = arrayToProxy.slice;
+        arrayToProxy.slice = function () {
+            var oldValue = self.runtimeTarget[self.protectedKeyName]['__slice']();
+            var ret = Array.prototype.slice.apply(self.runtimeTarget[self.protectedKeyName], arguments);
+            self.runtimeTarget.onPropertyChanged(self.keyName, oldValue, self.runtimeTarget[self.protectedKeyName]);
+            self.subscribe(self);
+            return ret;
+        };
+    };
     return ArrayProxy;
 }());
 exports.ArrayProxy = ArrayProxy;

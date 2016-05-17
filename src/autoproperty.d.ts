@@ -27,12 +27,12 @@ export declare class ArrayProxy {
     private runtimeTarget;
     private keyName;
     private protectedKeyName;
-    private _arr;
+    arr: any[];
     subscriptions: ISimpleSubjectUnsubscribeFn[];
-    constructor(runtimeTarget: NotifyPropertyChanged, keyName: string, protectedKeyName: string, _arr: any[]);
+    constructor(runtimeTarget: NotifyPropertyChanged, keyName: string, protectedKeyName: string, arr: any[]);
     clear(): void;
     private unsubscribe(self?);
     private subscribe(self);
-    arr: any[];
+    private wrapProxy();
 }
 export declare function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName: string): any;
