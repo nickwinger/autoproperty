@@ -60,5 +60,13 @@ gets transformed into:
 ```
 Getter and setter and a "hidden" field are automagically created.
 
+## Manually creating a setter that feeds the propertyChanged stream
+If you already have a setter or want to manually create one and want the propertyChanged stream to notify just feed the
+stream like this:
+```typescript
+    this.onPropertyChanged(<keyName>, <oldValue>, <newValue>);
+```
+Replacing keyName with the name of the setter, oldValue with the previous Values and newValue with the new value.
+
 # Restrictions (and ToDo's)
 * Resursive. An autoproperty cannot have itself as a property (endless loop of typescript annotation)

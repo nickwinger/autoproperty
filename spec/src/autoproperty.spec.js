@@ -80,47 +80,51 @@ var Person = (function (_super) {
     return Person;
 }(autoproperty_1.NotifyPropertyChanged));
 describe('propertyChanged', function () {
-    it('should fire and reflect changes on strings', function () {
+    it('should fire and reflect changes on strings', function (done) {
         var p = new Person();
         var subscription = p.propertyChanged.subscribe(function (args) {
             expect(args.propertyName).toBe('name');
             expect(args.oldValue).toBe('Thomas');
             expect(args.newValue).toBe('Helmut');
+            subscription.unsubscribe();
+            done();
         });
         p.name = 'Helmut';
-        subscription.unsubscribe();
     });
-    it('should fire and reflect changes on numbers', function () {
+    it('should fire and reflect changes on numbers', function (done) {
         var p = new Person();
         var subscription = p.propertyChanged.subscribe(function (args) {
             expect(args.propertyName).toBe('id');
             expect(args.oldValue).toBe(15);
             expect(args.newValue).toBe(16);
+            subscription.unsubscribe();
+            done();
         });
         p.id = 16;
-        subscription.unsubscribe();
     });
-    it('should fire and reflect changes on booleans', function () {
+    it('should fire and reflect changes on booleans', function (done) {
         var p = new Person();
         var subscription = p.propertyChanged.subscribe(function (args) {
             expect(args.propertyName).toBe('newsletter');
             expect(args.oldValue).toBe(false);
             expect(args.newValue).toBe(true);
+            subscription.unsubscribe();
+            done();
         });
         p.newsletter = true;
-        subscription.unsubscribe();
     });
-    it('should fire and reflect changes on classes', function () {
+    it('should fire and reflect changes on classes', function (done) {
         var p = new Person();
         var subscription = p.propertyChanged.subscribe(function (args) {
             expect(args.propertyName).toBe('car');
             expect(args.oldValue.make).toBe('Chevrolet');
             expect(args.newValue.make).toBe('Ford');
+            subscription.unsubscribe();
+            done();
         });
         p.car = new Car('Ford');
-        subscription.unsubscribe();
     });
-    it('should fire and reflect changes on arrays', function () {
+    it('should fire and reflect changes on arrays', function (done) {
         var p = new Person();
         var subscription = p.propertyChanged.subscribe(function (args) {
             expect(args.propertyName).toBe('hobbies');
@@ -129,17 +133,19 @@ describe('propertyChanged', function () {
             expect(args.newValue.length).toBe(2);
             expect(args.newValue[0]).toBe('Skiing');
             expect(args.newValue[1]).toBe('Driving');
+            subscription.unsubscribe();
+            done();
         });
         p.hobbies.push('Driving');
-        subscription.unsubscribe();
     });
-    it('should fire and reflect changes on properties of child classes', function () {
+    it('should fire and reflect changes on properties of child classes', function (done) {
         var p = new Person();
         var subscription = p.propertyChanged.subscribe(function (args) {
             expect(args.propertyName).toBe('child.name');
             expect(args.newValue).toBe('Florian');
+            subscription.unsubscribe();
+            done();
         });
         p.child.name = 'Florian';
-        subscription.unsubscribe();
     });
 });

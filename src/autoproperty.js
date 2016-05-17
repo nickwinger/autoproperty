@@ -66,9 +66,10 @@ function autoproperty(target, keyName) {
     var anyTarget = target;
     anyTarget[protectedKeyName] = anyTarget[keyName];
     var type;
+    var typeMapHash = target.constructor['name'] + '.' + keyName;
     var getterAndSetterAlreadyAdded = false;
     for (var i = 0; i < typeMap.length; i++) {
-        if (typeMap[i] === target.constructor['name']) {
+        if (typeMap[i] === typeMapHash) {
             getterAndSetterAlreadyAdded = true;
             break;
         }
@@ -76,7 +77,7 @@ function autoproperty(target, keyName) {
     if (getterAndSetterAlreadyAdded) {
         return;
     }
-    typeMap.push(target.constructor['name']);
+    typeMap.push(typeMapHash);
     Object.defineProperty(target, keyName, {
         get: function () {
             var ret = this[protectedKeyName];

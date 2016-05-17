@@ -75,11 +75,12 @@ export function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName
     var anyTarget = <any>target;
     anyTarget[protectedKeyName] = anyTarget[keyName];
     var type: string;
+    var typeMapHash = target.constructor['name'] + '.' + keyName;
 
     var getterAndSetterAlreadyAdded = false;
 
     for (var i = 0; i < typeMap.length; i++) {
-        if (typeMap[i] === target.constructor['name']) {
+        if (typeMap[i] === typeMapHash) {
             getterAndSetterAlreadyAdded = true;
             break;
         }
@@ -89,7 +90,7 @@ export function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName
         return;
     }
 
-    typeMap.push(target.constructor['name']);
+    typeMap.push(typeMapHash);
 
     // automagically create getter and setter
     Object.defineProperty(target, keyName, {
