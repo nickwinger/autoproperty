@@ -155,9 +155,7 @@ describe('propertyChanged', () => {
         var p2 = new Passenger();
 
         var subscription = man.propertyChanged.subscribe((args: PropertyChangedEventArgs) => {
-            console.log('args', args);
-
-            if (args.propertyName === 'store.challengedFlags.hasAssistanceDog') {
+            if (args.propertyName === 'store.passengers[0].challengedFlags.hasAssistanceDog') {
                 subscription.unsubscribe();
                 done();
             }
@@ -165,6 +163,6 @@ describe('propertyChanged', () => {
 
         man.passengers.push(p);
         man.store.passengers.push(p2);
-        p.challengedFlags.hasAssistanceDog = true;
+        p2.challengedFlags.hasAssistanceDog = true;
     });
 });

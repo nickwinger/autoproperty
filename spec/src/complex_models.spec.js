@@ -246,14 +246,13 @@ describe('propertyChanged', function () {
         var p = new Passenger();
         var p2 = new Passenger();
         var subscription = man.propertyChanged.subscribe(function (args) {
-            console.log('args', args);
-            if (args.propertyName === 'store.challengedFlags.hasAssistanceDog') {
+            if (args.propertyName === 'store.passengers[0].challengedFlags.hasAssistanceDog') {
                 subscription.unsubscribe();
                 done();
             }
         });
         man.passengers.push(p);
         man.store.passengers.push(p2);
-        p.challengedFlags.hasAssistanceDog = true;
+        p2.challengedFlags.hasAssistanceDog = true;
     });
 });

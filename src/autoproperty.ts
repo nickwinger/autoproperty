@@ -167,8 +167,9 @@ export function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName
     anyTarget[protectedKeyName] = anyTarget[keyName];
     var type: string;
     var typeMapHash = target.constructor['name'] + '.' + keyName;
+    var getterProxyKey: string = '__getterProxy';
 
-    var getterAndSetterAlreadyAdded = false;
+    /*var getterAndSetterAlreadyAdded = false;
 
     for (var i = 0; i < typeMap.length; i++) {
         if (typeMap[i] === typeMapHash) {
@@ -181,9 +182,7 @@ export function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName
         return;
     }
 
-    typeMap.push(typeMapHash);
-
-    var getterProxy: ArrayProxy; // used for arrays
+    typeMap.push(typeMapHash);*/
 
     // automagically create getter and setter
     Object.defineProperty(target, keyName, {
@@ -192,11 +191,11 @@ export function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName
 
             // return an array proxy to intercept the calls to push, pop, shift, unshift and slice
             if (type === '[object Array]') {
-                if (!getterProxy) {
-                    getterProxy = new ArrayProxy(this, keyName, protectedKeyName, ret);
+                if (!this[getterProxyKey]) {
+                    this[getterProxyKey] = new ArrayProxy(this, keyName, protectedKeyName, ret);
                 }
                 
-                ret = getterProxy.arr;
+                ret = this[getterProxyKey].arr;
             }
 
             return ret;
@@ -210,9 +209,9 @@ export function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName
 
             // When assigning a new array, reset the getterProxy
             if (type === '[object Array]') {
-                if (getterProxy) {
-                    getterProxy.clear();
-                    getterProxy = undefined;
+                if (this[getterProxyKey]) {
+                    this[getterProxyKey].clear();
+                    this[getterProxyKey] = undefined;
                 }
             }
 

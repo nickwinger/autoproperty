@@ -153,26 +153,15 @@ function autoproperty(target, keyName) {
     anyTarget[protectedKeyName] = anyTarget[keyName];
     var type;
     var typeMapHash = target.constructor['name'] + '.' + keyName;
-    var getterAndSetterAlreadyAdded = false;
-    for (var i = 0; i < typeMap.length; i++) {
-        if (typeMap[i] === typeMapHash) {
-            getterAndSetterAlreadyAdded = true;
-            break;
-        }
-    }
-    if (getterAndSetterAlreadyAdded) {
-        return;
-    }
-    typeMap.push(typeMapHash);
-    var getterProxy;
+    var getterProxyKey = '__getterProxy';
     Object.defineProperty(target, keyName, {
         get: function () {
             var ret = this[protectedKeyName];
             if (type === '[object Array]') {
-                if (!getterProxy) {
-                    getterProxy = new ArrayProxy(this, keyName, protectedKeyName, ret);
+                if (!this[getterProxyKey]) {
+                    this[getterProxyKey] = new ArrayProxy(this, keyName, protectedKeyName, ret);
                 }
-                ret = getterProxy.arr;
+                ret = this[getterProxyKey].arr;
             }
             return ret;
         },
@@ -182,9 +171,9 @@ function autoproperty(target, keyName) {
             this[protectedKeyName] = newValue;
             type = Object.prototype.toString.call(newValue);
             if (type === '[object Array]') {
-                if (getterProxy) {
-                    getterProxy.clear();
-                    getterProxy = undefined;
+                if (this[getterProxyKey]) {
+                    this[getterProxyKey].clear();
+                    this[getterProxyKey] = undefined;
                 }
             }
             if (newValue instanceof NotifyPropertyChanged) {
