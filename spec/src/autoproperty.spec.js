@@ -79,6 +79,18 @@ var Person = (function (_super) {
     ], Person.prototype, "child", void 0);
     return Person;
 }(autoproperty_1.NotifyPropertyChanged));
+var Persons = (function (_super) {
+    __extends(Persons, _super);
+    function Persons() {
+        _super.call(this);
+        this.persons = [];
+    }
+    __decorate([
+        autoproperty_1.autoproperty, 
+        __metadata('design:type', Array)
+    ], Persons.prototype, "persons", void 0);
+    return Persons;
+}(autoproperty_1.NotifyPropertyChanged));
 describe('propertyChanged', function () {
     it('should fire and reflect changes on strings', function (done) {
         var p = new Person();
@@ -147,5 +159,37 @@ describe('propertyChanged', function () {
             done();
         });
         p.child.name = 'Florian';
+    });
+    it('should fire and reflect changes on classes inside an array', function (done) {
+        var pArr = new Persons();
+        var p = new Person();
+        var subscription = pArr.propertyChanged.subscribe(function (args) {
+            if (args.propertyName === 'persons[0].name') {
+                expect(args.oldValue).toBe('Thomas');
+                expect(args.newValue).toBe('Tarek');
+                subscription.unsubscribe();
+                done();
+            }
+        });
+        pArr.persons.push(p);
+        p.name = 'Tarek';
+    });
+    it('should fire and reflect changes on classes inside an array 2', function (done) {
+        var pArr = new Persons();
+        var p = new Person();
+        var subscription = pArr.propertyChanged.subscribe(function (args) {
+            if (args.propertyName === 'persons[1].name') {
+                expect(args.oldValue).toBe('Tarek');
+                expect(args.newValue).toBe('Hermine');
+                subscription.unsubscribe();
+                done();
+            }
+        });
+        pArr.persons.push(p);
+        p.name = 'Tarek';
+        pArr.persons = [];
+        pArr.persons.push(new Person());
+        pArr.persons.push(p);
+        p.name = 'Hermine';
     });
 });

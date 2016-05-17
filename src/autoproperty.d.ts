@@ -23,4 +23,16 @@ export declare abstract class NotifyPropertyChanged implements INotifyPropertyCh
     constructor();
     onPropertyChanged(name: string, oldValue: any, newValue: any): void;
 }
+export declare class ArrayProxy {
+    private runtimeTarget;
+    private keyName;
+    private protectedKeyName;
+    private _arr;
+    subscriptions: ISimpleSubjectUnsubscribeFn[];
+    constructor(runtimeTarget: NotifyPropertyChanged, keyName: string, protectedKeyName: string, _arr: any[]);
+    clear(): void;
+    private unsubscribe(self?);
+    private subscribe(self);
+    arr: any[];
+}
 export declare function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName: string): any;

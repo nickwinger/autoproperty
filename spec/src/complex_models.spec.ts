@@ -44,6 +44,27 @@ export class Passenger extends NotifyPropertyChanged {
     }
 }
 
+export class PassengerCollection extends NotifyPropertyChanged {
+    @autoproperty
+    passengers:Passenger[];
+
+    constructor(passengers:Passenger[] = []) {
+        super();
+
+        this.passengers = passengers;
+    }
+}
+
+export class PassengerManager extends PassengerCollection {
+    @autoproperty
+    store: PassengerCollection;
+
+    constructor() {
+        super();
+        this.store = new PassengerCollection();
+    }
+}
+
 export class ChallengedFlags extends NotifyPropertyChanged {
     @autoproperty hasHandicappedPass:boolean;
     @autoproperty hasAssistanceDog:boolean;
@@ -125,6 +146,25 @@ describe('propertyChanged', () => {
             done();
         });
 
+        p.challengedFlags.hasAssistanceDog = true;
+    });
+
+    it('should fire and reflect changes on complex Models -> property of class inside array', (done) => {
+        var man = new PassengerManager();
+        var p = new Passenger();
+        var p2 = new Passenger();
+
+        var subscription = man.propertyChanged.subscribe((args: PropertyChangedEventArgs) => {
+            console.log('args', args);
+
+            if (args.propertyName === 'store.challengedFlags.hasAssistanceDog') {
+                subscription.unsubscribe();
+                done();
+            }
+        });
+
+        man.passengers.push(p);
+        man.store.passengers.push(p2);
         p.challengedFlags.hasAssistanceDog = true;
     });
 });

@@ -116,6 +116,33 @@ var Passenger = (function (_super) {
     return Passenger;
 }(autoproperty_1.NotifyPropertyChanged));
 exports.Passenger = Passenger;
+var PassengerCollection = (function (_super) {
+    __extends(PassengerCollection, _super);
+    function PassengerCollection(passengers) {
+        if (passengers === void 0) { passengers = []; }
+        _super.call(this);
+        this.passengers = passengers;
+    }
+    __decorate([
+        autoproperty_1.autoproperty, 
+        __metadata('design:type', Array)
+    ], PassengerCollection.prototype, "passengers", void 0);
+    return PassengerCollection;
+}(autoproperty_1.NotifyPropertyChanged));
+exports.PassengerCollection = PassengerCollection;
+var PassengerManager = (function (_super) {
+    __extends(PassengerManager, _super);
+    function PassengerManager() {
+        _super.call(this);
+        this.store = new PassengerCollection();
+    }
+    __decorate([
+        autoproperty_1.autoproperty, 
+        __metadata('design:type', PassengerCollection)
+    ], PassengerManager.prototype, "store", void 0);
+    return PassengerManager;
+}(PassengerCollection));
+exports.PassengerManager = PassengerManager;
 var ChallengedFlags = (function (_super) {
     __extends(ChallengedFlags, _super);
     function ChallengedFlags() {
@@ -212,6 +239,21 @@ describe('propertyChanged', function () {
             subscription.unsubscribe();
             done();
         });
+        p.challengedFlags.hasAssistanceDog = true;
+    });
+    it('should fire and reflect changes on complex Models -> property of class inside array', function (done) {
+        var man = new PassengerManager();
+        var p = new Passenger();
+        var p2 = new Passenger();
+        var subscription = man.propertyChanged.subscribe(function (args) {
+            console.log('args', args);
+            if (args.propertyName === 'store.challengedFlags.hasAssistanceDog') {
+                subscription.unsubscribe();
+                done();
+            }
+        });
+        man.passengers.push(p);
+        man.store.passengers.push(p2);
         p.challengedFlags.hasAssistanceDog = true;
     });
 });

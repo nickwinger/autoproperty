@@ -34,6 +34,14 @@ export declare class Passenger extends NotifyPropertyChanged {
     atFbgPassengerIndex: number;
     constructor();
 }
+export declare class PassengerCollection extends NotifyPropertyChanged {
+    passengers: Passenger[];
+    constructor(passengers?: Passenger[]);
+}
+export declare class PassengerManager extends PassengerCollection {
+    store: PassengerCollection;
+    constructor();
+}
 export declare class ChallengedFlags extends NotifyPropertyChanged {
     hasHandicappedPass: boolean;
     hasAssistanceDog: boolean;

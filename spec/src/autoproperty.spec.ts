@@ -48,6 +48,17 @@ class Person extends NotifyPropertyChanged {
     }
 }
 
+class Persons extends NotifyPropertyChanged {
+    @autoproperty
+    persons: Person[];
+
+    constructor() {
+        super();
+
+        this.persons = [];
+    }
+}
+
 describe('propertyChanged', () => {
     it('should fire and reflect changes on strings', (done) => {
         var p = new Person();
@@ -139,6 +150,47 @@ describe('propertyChanged', () => {
         });
 
         p.child.name = 'Florian';
+    });
+
+    it('should fire and reflect changes on classes inside an array', (done) => {
+        var pArr = new Persons();
+        var p = new Person();
+
+        var subscription = pArr.propertyChanged.subscribe((args: PropertyChangedEventArgsGeneric<Array<string>>) => {
+            if (args.propertyName === 'persons[0].name') {
+                expect(args.oldValue).toBe('Thomas');
+                expect(args.newValue).toBe('Tarek');
+                
+                subscription.unsubscribe();
+                done();
+            }
+        });
+
+        pArr.persons.push(p);
+        p.name = 'Tarek';
+    });
+
+    it('should fire and reflect changes on classes inside an array 2', (done) => {
+        var pArr = new Persons();
+        var p = new Person();
+
+        var subscription = pArr.propertyChanged.subscribe((args: PropertyChangedEventArgsGeneric<Array<string>>) => {
+            if (args.propertyName === 'persons[1].name') {
+                expect(args.oldValue).toBe('Tarek');
+                expect(args.newValue).toBe('Hermine');
+
+                subscription.unsubscribe();
+                done();
+            }
+        });
+
+        pArr.persons.push(p);
+        p.name = 'Tarek';
+
+        pArr.persons = [];
+        pArr.persons.push(new Person());
+        pArr.persons.push(p);
+        p.name = 'Hermine';
     });
 });
 
