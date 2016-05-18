@@ -63,7 +63,7 @@ describe('propertyChanged', () => {
     it('should fire and reflect changes on strings', (done) => {
         var p = new Person();
 
-        var subscription = p.propertyChanged.subscribe((args: PropertyChangedEventArgs) => {
+        var subscription = p.$propertyChanged.subscribe((args: PropertyChangedEventArgs) => {
             expect(args.propertyName).toBe('name');
             expect(args.oldValue).toBe('Thomas');
             expect(args.newValue).toBe('Helmut');
@@ -78,7 +78,7 @@ describe('propertyChanged', () => {
     it('should fire and reflect changes on numbers', (done) => {
         var p = new Person();
 
-        var subscription = p.propertyChanged.subscribe((args: PropertyChangedEventArgs) => {
+        var subscription = p.$propertyChanged.subscribe((args: PropertyChangedEventArgs) => {
             expect(args.propertyName).toBe('id');
             expect(args.oldValue).toBe(15);
             expect(args.newValue).toBe(16);
@@ -93,7 +93,7 @@ describe('propertyChanged', () => {
     it('should fire and reflect changes on booleans', (done) => {
         var p = new Person();
 
-        var subscription = p.propertyChanged.subscribe((args: PropertyChangedEventArgs) => {
+        var subscription = p.$propertyChanged.subscribe((args: PropertyChangedEventArgs) => {
             expect(args.propertyName).toBe('newsletter');
             expect(args.oldValue).toBe(false);
             expect(args.newValue).toBe(true);
@@ -108,7 +108,7 @@ describe('propertyChanged', () => {
     it('should fire and reflect changes on classes', (done) => {
         var p = new Person();
 
-        var subscription = p.propertyChanged.subscribe((args: PropertyChangedEventArgsGeneric<Car>) => {
+        var subscription = p.$propertyChanged.subscribe((args: PropertyChangedEventArgsGeneric<Car>) => {
             expect(args.propertyName).toBe('car');
             expect(args.oldValue.make).toBe('Chevrolet');
             expect(args.newValue.make).toBe('Ford');
@@ -123,7 +123,7 @@ describe('propertyChanged', () => {
     it('should fire and reflect changes on arrays', (done) => {
         var p = new Person();
 
-        var subscription = p.propertyChanged.subscribe((args: PropertyChangedEventArgsGeneric<Array<string>>) => {
+        var subscription = p.$propertyChanged.subscribe((args: PropertyChangedEventArgsGeneric<Array<string>>) => {
             expect(args.propertyName).toBe('hobbies');
             expect(args.oldValue.length).toBe(1);
             expect(args.oldValue[0]).toBe('Skiing');
@@ -141,7 +141,7 @@ describe('propertyChanged', () => {
     it('should fire and reflect changes on properties of child classes', (done) => {
         var p = new Person();
 
-        var subscription = p.propertyChanged.subscribe((args: PropertyChangedEventArgsGeneric<Array<string>>) => {
+        var subscription = p.$propertyChanged.subscribe((args: PropertyChangedEventArgsGeneric<Array<string>>) => {
             expect(args.propertyName).toBe('child.name');
             expect(args.newValue).toBe('Florian');
             subscription.unsubscribe();
@@ -156,7 +156,7 @@ describe('propertyChanged', () => {
         var pArr = new Persons();
         var p = new Person();
 
-        var subscription = pArr.propertyChanged.subscribe((args: PropertyChangedEventArgsGeneric<Array<string>>) => {
+        var subscription = pArr.$propertyChanged.subscribe((args: PropertyChangedEventArgsGeneric<Array<string>>) => {
             if (args.propertyName === 'persons[0].name') {
                 expect(args.oldValue).toBe('Thomas');
                 expect(args.newValue).toBe('Tarek');
@@ -174,7 +174,7 @@ describe('propertyChanged', () => {
         var pArr = new Persons();
         var p = new Person();
 
-        var subscription = pArr.propertyChanged.subscribe((args: PropertyChangedEventArgsGeneric<Array<string>>) => {
+        var subscription = pArr.$propertyChanged.subscribe((args: PropertyChangedEventArgsGeneric<Array<string>>) => {
             if (args.propertyName === 'persons[1].name') {
                 expect(args.oldValue).toBe('Tarek');
                 expect(args.newValue).toBe('Hermine');

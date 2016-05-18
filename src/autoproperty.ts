@@ -50,19 +50,19 @@ export class PropertyChangedEventArgs extends PropertyChangedEventArgsGeneric<an
 }
 
 export interface INotifyPropertyChanged {
-    propertyChanged: SimpleSubject<PropertyChangedEventArgs>;
+    $propertyChanged: SimpleSubject<PropertyChangedEventArgs>;
     onPropertyChanged(name: string, oldValue: any, newValue: any): void;
 }
 
 export abstract class NotifyPropertyChanged implements INotifyPropertyChanged {
-    propertyChanged: SimpleSubject<PropertyChangedEventArgs>;
+    $propertyChanged: SimpleSubject<PropertyChangedEventArgs>;
 
     constructor() {
-        this.propertyChanged = new SimpleSubject<PropertyChangedEventArgs>();
+        this.$propertyChanged = new SimpleSubject<PropertyChangedEventArgs>();
     }
 
     onPropertyChanged(name: string, oldValue: any, newValue: any): void {
-        this.propertyChanged.next(new PropertyChangedEventArgs(name, oldValue, newValue));
+        this.$propertyChanged.next(new PropertyChangedEventArgs(name, oldValue, newValue));
     }
 }
 
@@ -105,7 +105,7 @@ export class ArrayProxy {
             var elem = self.arr[i];
             if (elem instanceof NotifyPropertyChanged) {
                 let index = i;
-                var subscription = elem.propertyChanged.subscribe((args:PropertyChangedEventArgs) => {
+                var subscription = elem.$propertyChanged.subscribe((args:PropertyChangedEventArgs) => {
                     // something changed inside a property that itself is a NotifyPropertyChanged class
                     // prefix the keyName
                     self.runtimeTarget.onPropertyChanged(self.keyName + '[' + index + ']' + '.' + args.propertyName, args.oldValue, args.newValue);
@@ -224,7 +224,7 @@ export function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName
 
             // if the property itself is a subclass of NotifyPropertyChanged, listen for changes there
             if (newValue instanceof NotifyPropertyChanged) {
-                newValue.propertyChanged.subscribe((args: PropertyChangedEventArgs) => {
+                newValue.$propertyChanged.subscribe((args: PropertyChangedEventArgs) => {
                     // something changed inside a property that itself is a NotifyPropertyChanged class
                     // prefix the keyName
                     this.onPropertyChanged(keyName + '.' + args.propertyName, args.oldValue, args.newValue);

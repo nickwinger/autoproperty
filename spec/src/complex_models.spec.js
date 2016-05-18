@@ -210,7 +210,7 @@ exports.SchoolcardGroup = SchoolcardGroup;
 describe('propertyChanged', function () {
     it('should fire and reflect changes on complex Models -> moment', function (done) {
         var p = new Passenger();
-        var subscription = p.propertyChanged.subscribe(function (args) {
+        var subscription = p.$propertyChanged.subscribe(function (args) {
             expect(args.propertyName).toBe('birthDate');
             expect(args.oldValue.format("YYYYMMDD")).toBe("20160101");
             expect(args.newValue.format("YYYYMMDD")).toBe("20160102");
@@ -221,7 +221,7 @@ describe('propertyChanged', function () {
     });
     it('should fire and reflect changes on complex Models -> enum', function (done) {
         var p = new Passenger();
-        var subscription = p.propertyChanged.subscribe(function (args) {
+        var subscription = p.$propertyChanged.subscribe(function (args) {
             expect(args.propertyName).toBe('type');
             expect(args.oldValue).toBe(IPassengerType.ADULT);
             expect(args.newValue).toBe(IPassengerType.BENEFITED);
@@ -232,7 +232,7 @@ describe('propertyChanged', function () {
     });
     it('should fire and reflect changes on complex Models -> subModel change', function (done) {
         var p = new Passenger();
-        var subscription = p.propertyChanged.subscribe(function (args) {
+        var subscription = p.$propertyChanged.subscribe(function (args) {
             expect(args.propertyName).toBe('challengedFlags.hasAssistanceDog');
             expect(args.oldValue).toBe(false);
             expect(args.newValue).toBe(true);
@@ -245,7 +245,7 @@ describe('propertyChanged', function () {
         var man = new PassengerManager();
         var p = new Passenger();
         var p2 = new Passenger();
-        var subscription = man.propertyChanged.subscribe(function (args) {
+        var subscription = man.$propertyChanged.subscribe(function (args) {
             if (args.propertyName === 'store.passengers[0].challengedFlags.hasAssistanceDog') {
                 subscription.unsubscribe();
                 done();

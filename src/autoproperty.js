@@ -52,10 +52,10 @@ var PropertyChangedEventArgs = (function (_super) {
 exports.PropertyChangedEventArgs = PropertyChangedEventArgs;
 var NotifyPropertyChanged = (function () {
     function NotifyPropertyChanged() {
-        this.propertyChanged = new SimpleSubject();
+        this.$propertyChanged = new SimpleSubject();
     }
     NotifyPropertyChanged.prototype.onPropertyChanged = function (name, oldValue, newValue) {
-        this.propertyChanged.next(new PropertyChangedEventArgs(name, oldValue, newValue));
+        this.$propertyChanged.next(new PropertyChangedEventArgs(name, oldValue, newValue));
     };
     return NotifyPropertyChanged;
 }());
@@ -89,7 +89,7 @@ var ArrayProxy = (function () {
             elem = self.arr[i];
             if (elem instanceof NotifyPropertyChanged) {
                 var index_1 = i;
-                subscription = elem.propertyChanged.subscribe(function (args) {
+                subscription = elem.$propertyChanged.subscribe(function (args) {
                     self.runtimeTarget.onPropertyChanged(self.keyName + '[' + index_1 + ']' + '.' + args.propertyName, args.oldValue, args.newValue);
                 });
                 self.subscriptions.push(subscription);
@@ -177,7 +177,7 @@ function autoproperty(target, keyName) {
                 }
             }
             if (newValue instanceof NotifyPropertyChanged) {
-                newValue.propertyChanged.subscribe(function (args) {
+                newValue.$propertyChanged.subscribe(function (args) {
                     _this.onPropertyChanged(keyName + '.' + args.propertyName, args.oldValue, args.newValue);
                 });
             }

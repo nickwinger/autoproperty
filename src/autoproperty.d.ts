@@ -15,11 +15,11 @@ export declare class PropertyChangedEventArgsGeneric<T> {
 export declare class PropertyChangedEventArgs extends PropertyChangedEventArgsGeneric<any> {
 }
 export interface INotifyPropertyChanged {
-    propertyChanged: SimpleSubject<PropertyChangedEventArgs>;
+    $propertyChanged: SimpleSubject<PropertyChangedEventArgs>;
     onPropertyChanged(name: string, oldValue: any, newValue: any): void;
 }
 export declare abstract class NotifyPropertyChanged implements INotifyPropertyChanged {
-    propertyChanged: SimpleSubject<PropertyChangedEventArgs>;
+    $propertyChanged: SimpleSubject<PropertyChangedEventArgs>;
     constructor();
     onPropertyChanged(name: string, oldValue: any, newValue: any): void;
 }
