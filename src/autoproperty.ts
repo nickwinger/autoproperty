@@ -7,6 +7,8 @@ export interface ISimpleSubjectUnsubscribeFn {
     unsubscribe: () => void;
 }
 
+export var version = "1.1.6";
+
 export class SimpleSubject<T> {
     listeners: Function[] = [];
 
