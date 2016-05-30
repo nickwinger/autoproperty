@@ -7,7 +7,7 @@ export interface ISimpleSubjectUnsubscribeFn {
     unsubscribe: () => void;
 }
 
-export var version = "1.1.8";
+export var version = "1.1.9";
 
 export class SimpleSubject<T> {
     listeners: Function[] = [];
@@ -169,7 +169,13 @@ export class ArrayProxy {
     }
 }
 
+export var enabled = true;
+
 export function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName: string): any {
+    if (!enabled) {
+        return;
+    }
+
     // automagically create a protected member and assign the default value
     var protectedKeyName = '$' + keyName;
     var anyTarget = <any>target;

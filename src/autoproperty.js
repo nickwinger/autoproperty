@@ -4,6 +4,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+exports.version = "1.1.9";
 var SimpleSubject = (function () {
     function SimpleSubject() {
         this.listeners = [];
@@ -147,7 +148,11 @@ var ArrayProxy = (function () {
     return ArrayProxy;
 }());
 exports.ArrayProxy = ArrayProxy;
+exports.enabled = true;
 function autoproperty(target, keyName) {
+    if (!exports.enabled) {
+        return;
+    }
     var protectedKeyName = '$' + keyName;
     var anyTarget = target;
     anyTarget[protectedKeyName] = anyTarget[keyName];

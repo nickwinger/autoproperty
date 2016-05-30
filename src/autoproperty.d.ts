@@ -1,6 +1,7 @@
 export interface ISimpleSubjectUnsubscribeFn {
     unsubscribe: () => void;
 }
+export declare var version: string;
 export declare class SimpleSubject<T> {
     listeners: Function[];
     next(value: T): void;
@@ -35,4 +36,5 @@ export declare class ArrayProxy {
     private subscribe(self);
     private wrapProxy();
 }
+export declare var enabled: boolean;
 export declare function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName: string): any;
