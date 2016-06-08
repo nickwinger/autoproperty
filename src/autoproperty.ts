@@ -7,7 +7,7 @@ export interface ISimpleSubjectUnsubscribeFn {
     unsubscribe: () => void;
 }
 
-export var version = "1.1.10";
+export var version = "1.1.11";
 
 export class SimpleSubject<T> {
     listeners: Function[] = [];
@@ -206,11 +206,18 @@ export function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName
 
             // return an array proxy to intercept the calls to push, pop, shift, unshift and slice
             if (type === '[object Array]') {
-                if (!this[getterProxyKey+keyName]) {
-                    this[getterProxyKey+keyName] = new ArrayProxy(this, keyName, protectedKeyName, ret);
+                // sometimes the value of ret can be undefined in getter when not gone through the setter
+                if (ret == undefined) {
+                    if (this[getterProxyKey + keyName]) {
+                        this[getterProxyKey + keyName].clear();
+                        this[getterProxyKey + keyName] = undefined;
+                    }
+                } else {
+                    if (!this[getterProxyKey + keyName]) {
+                        this[getterProxyKey + keyName] = new ArrayProxy(this, keyName, protectedKeyName, ret);
+                    }
+                    ret = this[getterProxyKey + keyName].arr;
                 }
-                
-                ret = this[getterProxyKey+keyName].arr;
             }
 
             return ret;
