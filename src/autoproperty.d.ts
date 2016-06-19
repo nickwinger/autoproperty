@@ -37,4 +37,5 @@ export declare class ArrayProxy {
     private wrapProxy();
 }
 export declare var enabled: boolean;
+export declare function setEnabled(enabled_: boolean): void;
 export declare function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName: string): any;

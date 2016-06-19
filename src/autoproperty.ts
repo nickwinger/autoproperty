@@ -1,4 +1,4 @@
-import {Subject} from "rxjs";
+//import {Subject} from "rxjs";
 
 // Right now there are problems with the rxjs subject going into an infinite loop, so we have to hack our own simple implemention
 // for the time beeing
@@ -7,7 +7,7 @@ export interface ISimpleSubjectUnsubscribeFn {
     unsubscribe: () => void;
 }
 
-export var version = "1.1.11";
+export var version = "1.1.12";
 
 export class SimpleSubject<T> {
     listeners: Function[] = [];
@@ -170,6 +170,10 @@ export class ArrayProxy {
 }
 
 export var enabled = true;
+
+export function setEnabled(enabled_: boolean) {
+    enabled = enabled_;
+}
 
 export function autoproperty<T extends NotifyPropertyChanged>(target: T, keyName: string): any {
     if (!enabled) {

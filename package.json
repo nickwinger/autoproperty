@@ -3,7 +3,7 @@
   "version": "1.1.11",
   "description": "Automagically creates getter and setter to provide OnPropertyChanged Stream",
   "main": "src/autoproperty.js",
-  "typings": "src/serialize.d.ts",
+  "typings": "src/autoproperty.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
