@@ -2,3 +2,5 @@
 /.idea
 autoproperty.iml
 .npmrc
+*.js
+*.d.ts

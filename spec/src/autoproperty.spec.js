@@ -1,9 +1,14 @@
 "use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -13,84 +18,88 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var autoproperty_1 = require('../../src/autoproperty');
+Object.defineProperty(exports, "__esModule", { value: true });
+var autoproperty_1 = require("../../src/autoproperty");
 var Car = (function (_super) {
     __extends(Car, _super);
     function Car(make) {
-        _super.call(this);
-        this.make = make;
+        var _this = _super.call(this) || this;
+        _this.make = make;
+        return _this;
     }
-    __decorate([
-        autoproperty_1.autoproperty, 
-        __metadata('design:type', String)
-    ], Car.prototype, "make", void 0);
     return Car;
 }(autoproperty_1.NotifyPropertyChanged));
+__decorate([
+    autoproperty_1.autoproperty,
+    __metadata("design:type", String)
+], Car.prototype, "make", void 0);
 var Child = (function (_super) {
     __extends(Child, _super);
     function Child() {
-        _super.apply(this, arguments);
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    __decorate([
-        autoproperty_1.autoproperty, 
-        __metadata('design:type', String)
-    ], Child.prototype, "name", void 0);
     return Child;
 }(autoproperty_1.NotifyPropertyChanged));
+__decorate([
+    autoproperty_1.autoproperty,
+    __metadata("design:type", String)
+], Child.prototype, "name", void 0);
 var Person = (function (_super) {
     __extends(Person, _super);
     function Person() {
-        _super.call(this);
-        this.name = 'Thomas';
-        this.id = 15;
-        this.newsletter = false;
-        this.hobbies = ['Skiing'];
-        this.car = new Car('Chevrolet');
-        this.secondCar = new Car('Toyota');
-        this.child = new Child();
+        var _this = _super.call(this) || this;
+        _this.name = 'Thomas';
+        _this.id = 15;
+        _this.newsletter = false;
+        _this.hobbies = ['Skiing'];
+        _this.car = new Car('Chevrolet');
+        _this.secondCar = new Car('Toyota');
+        _this.child = new Child();
+        return _this;
     }
-    __decorate([
-        autoproperty_1.autoproperty, 
-        __metadata('design:type', String)
-    ], Person.prototype, "name", void 0);
-    __decorate([
-        autoproperty_1.autoproperty, 
-        __metadata('design:type', Number)
-    ], Person.prototype, "id", void 0);
-    __decorate([
-        autoproperty_1.autoproperty, 
-        __metadata('design:type', Boolean)
-    ], Person.prototype, "newsletter", void 0);
-    __decorate([
-        autoproperty_1.autoproperty, 
-        __metadata('design:type', Car)
-    ], Person.prototype, "car", void 0);
-    __decorate([
-        autoproperty_1.autoproperty, 
-        __metadata('design:type', Car)
-    ], Person.prototype, "secondCar", void 0);
-    __decorate([
-        autoproperty_1.autoproperty, 
-        __metadata('design:type', Array)
-    ], Person.prototype, "hobbies", void 0);
-    __decorate([
-        autoproperty_1.autoproperty, 
-        __metadata('design:type', Child)
-    ], Person.prototype, "child", void 0);
     return Person;
 }(autoproperty_1.NotifyPropertyChanged));
+__decorate([
+    autoproperty_1.autoproperty,
+    __metadata("design:type", String)
+], Person.prototype, "name", void 0);
+__decorate([
+    autoproperty_1.autoproperty,
+    __metadata("design:type", Number)
+], Person.prototype, "id", void 0);
+__decorate([
+    autoproperty_1.autoproperty,
+    __metadata("design:type", Boolean)
+], Person.prototype, "newsletter", void 0);
+__decorate([
+    autoproperty_1.autoproperty,
+    __metadata("design:type", Car)
+], Person.prototype, "car", void 0);
+__decorate([
+    autoproperty_1.autoproperty,
+    __metadata("design:type", Car)
+], Person.prototype, "secondCar", void 0);
+__decorate([
+    autoproperty_1.autoproperty,
+    __metadata("design:type", Array)
+], Person.prototype, "hobbies", void 0);
+__decorate([
+    autoproperty_1.autoproperty,
+    __metadata("design:type", Child)
+], Person.prototype, "child", void 0);
 var Persons = (function (_super) {
     __extends(Persons, _super);
     function Persons() {
-        _super.call(this);
-        this.persons = [];
+        var _this = _super.call(this) || this;
+        _this.persons = [];
+        return _this;
     }
-    __decorate([
-        autoproperty_1.autoproperty, 
-        __metadata('design:type', Array)
-    ], Persons.prototype, "persons", void 0);
     return Persons;
 }(autoproperty_1.NotifyPropertyChanged));
+__decorate([
+    autoproperty_1.autoproperty,
+    __metadata("design:type", Array)
+], Persons.prototype, "persons", void 0);
 describe('propertyChanged', function () {
     it('should fire and reflect changes on strings', function (done) {
         var p = new Person();

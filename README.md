@@ -70,3 +70,9 @@ Replacing keyName with the name of the setter, oldValue with the previous Values
 
 # Restrictions (and ToDo's)
 * Resursive. An autoproperty cannot have itself as a property (endless loop of typescript annotation)
+
+
+## Build and run tests
+1. run `npm install` to install all dependencies
+2. run `npm run tsc` to run the typescript compiler
+3. run `npm run test` to run the jasmine tests
