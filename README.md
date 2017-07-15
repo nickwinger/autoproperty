@@ -27,7 +27,7 @@ Using typescript annotations, we automagically create getter and setter out of a
     var p = new Person();
     p.name = 'John';
 
-    p.propertyChanged.subscribe((args: PropertyChangedEventArgs) => {
+    p.$propertyChanged.subscribe((args: PropertyChangedEventArgs) => {
         console.log(args.propertyName + ' changed from ' + args.oldValue + ' to ' + args.newValue);
     });
 ```
@@ -45,15 +45,15 @@ This:
 gets transformed into:
 ```typescript
     class Person extends NotifyPropertyChanged {
-        _name: string;
+        $name: string;
 
         get name(): string {
-            return this._name;
+            return this.$name;
         }
 
         set name(newValue: string) {
-            var oldValue = this._name;
-            this._name = newValue;
+            var oldValue = this.$name;
+            this.$name = newValue;
             this.propertyChanged.next('name', oldValue, newValue);
         }
     }
